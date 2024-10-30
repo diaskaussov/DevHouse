@@ -132,7 +132,7 @@ class MainViewController: UIViewController {
         NewController.view.backgroundColor = calculator.getColor()
     }
     
-    func initialSet() {
+    private func initialSet() {
         heightSlider.value = 1.5
         weightSlider.value = 100
         weightNumberLabel.text = "\(100)" + "Kg"
