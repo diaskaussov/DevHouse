@@ -49,7 +49,7 @@ struct StoryBrain {
         } else {
             number = storyArray[number].choice2Destination
         }
-}
+    }
     
     func updateStory() -> String {
         return storyArray[number].story
