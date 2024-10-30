@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  BMI Calculator
+//  BodyMassIndexCalculator
 //
-//  Created by Dias Kaussov on 28.10.2024.
+//  Created by Dias Kaussov on 30.10.2024.
 //
 
 import UIKit
