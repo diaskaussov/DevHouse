@@ -13,9 +13,16 @@ class SecondViewController: UIViewController {
         setUI()
     }
     
-    let backgroundImageView = UIImageView(image: #imageLiteral(resourceName: "result_background"))
+    private let backgroundImageView: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "result_background")
+        image.isUserInteractionEnabled = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+
     
-    private let resultLabel: UILabel = {
+    let resultLabel: UILabel = {
         let label = UILabel()
         label.text = "Your result:"
         label.textColor = .white
@@ -65,9 +72,6 @@ class SecondViewController: UIViewController {
         backgroundImageView.addSubview(resetButton)
         backgroundImageView.addSubview(bmiLabel)
         backgroundImageView.addSubview(stateLabel)
-        
-        backgroundImageView.isUserInteractionEnabled = true
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),

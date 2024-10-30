@@ -12,21 +12,25 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        initialSet()
     }
     
     var calculator = CalculatorBrain()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        heightSlider.value = 1.5
-        weightSlider.value = 100
-        weightNumberLabel.text = "\(100)" + "Kg"
-        heightNumberLabel.text = "\(1.5)" + "m"
+        initialSet()
     }
     
-    let backgroundImageView = UIImageView(image: #imageLiteral(resourceName: "calculate_background"))
+    private let backgroundImageView: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "calculate_background")
+        image.isUserInteractionEnabled = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
     
-    let NewController = SecondViewController()
+    private let NewController = SecondViewController()
     
     private let welcomeLabel: UILabel = {
         let label = UILabel()
@@ -51,7 +55,6 @@ class MainViewController: UIViewController {
         let slider = UISlider()
         slider.maximumValue = 3
         slider.minimumValue = 0
-        slider.value = 1.5
         slider.addTarget(nil, action: #selector(sliderChanged), for: .valueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
@@ -75,7 +78,6 @@ class MainViewController: UIViewController {
     
     private let heightNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(1.5)" + "m"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -84,7 +86,6 @@ class MainViewController: UIViewController {
         let slider = UISlider()
         slider.maximumValue = 200
         slider.minimumValue = 0
-        slider.value = 100
         slider.addTarget(nil, action: #selector(sliderChanged), for: .valueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
@@ -108,7 +109,6 @@ class MainViewController: UIViewController {
     
     private let weightNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(100)" + "Kg"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -132,6 +132,13 @@ class MainViewController: UIViewController {
         NewController.view.backgroundColor = calculator.getColor()
     }
     
+    func initialSet() {
+        heightSlider.value = 1.5
+        weightSlider.value = 100
+        weightNumberLabel.text = "\(100)" + "Kg"
+        heightNumberLabel.text = "\(1.5)" + "m"
+    }
+    
     private func setUI() {
         view.addSubview(backgroundImageView)
         backgroundImageView.addSubview(welcomeLabel)
@@ -144,9 +151,6 @@ class MainViewController: UIViewController {
         heightStack.addArrangedSubview(heightNumberLabel)
         weightStack.addArrangedSubview(weightTextLabel)
         weightStack.addArrangedSubview(weightNumberLabel)
-        
-        backgroundImageView.isUserInteractionEnabled = true
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -177,8 +181,7 @@ class MainViewController: UIViewController {
             
             heightStack.bottomAnchor.constraint(equalTo: heightSlider.topAnchor, constant: -10),
             heightStack.trailingAnchor.constraint(equalTo: heightSlider.trailingAnchor, constant: -10),
-            heightStack.leadingAnchor.constraint(equalTo: heightSlider.leadingAnchor, constant: 10),
-
+            heightStack.leadingAnchor.constraint(equalTo: heightSlider.leadingAnchor, constant: 10)
         ])
         
     }
