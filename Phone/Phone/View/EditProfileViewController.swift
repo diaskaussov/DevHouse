@@ -6,14 +6,15 @@
 //
 import UIKit
 
-protocol ProfileEditViewControllerDelegate: AnyObject {
+protocol EditProfileViewControllerDelegate: AnyObject {
     func changeColor(index: Int, color: UIColor)
+    func setNewName(index: Int, newName: String)
 }
 
-class ProfileEditViewController: UIViewController {
+class EditProfileViewController: UIViewController {
     let profile: Profile
     var index: Int
-    var delegate: ProfileEditViewControllerDelegate?
+    var delegate: EditProfileViewControllerDelegate?
     
     init(data: Profile, index: Int) {
         self.profile = data
@@ -24,6 +25,7 @@ class ProfileEditViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -129,9 +131,9 @@ class ProfileEditViewController: UIViewController {
     lazy var circleView: UIView = {
         let circle = UIView()
         circle.layer.cornerRadius = 150
+        circle.backgroundColor = profile.color
         circle.clipsToBounds = true
         circle.layer.masksToBounds = false
-        circle.backgroundColor = .green
         circle.layer.borderWidth = 1
         circle.layer.borderColor = UIColor.white.cgColor
         circle.translatesAutoresizingMaskIntoConstraints = false
@@ -156,13 +158,29 @@ class ProfileEditViewController: UIViewController {
     }()
     
     lazy var nameLabel: UITextField = {
-        let label = UITextField()
-        label.text = profile.name
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 48, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.isUserInteractionEnabled = true
-        return label
+        let textField = UITextField()
+        textField.text = profile.name
+        textField.textColor = .black
+        textField.font = .systemFont(ofSize: 48, weight: .bold)
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.isUserInteractionEnabled = true
+        return textField
+    }()
+    
+    private let toolBar: UIToolbar = {
+        let tool = UIToolbar()
+        tool.barStyle = .default
+        tool.isTranslucent = false
+        tool.tintColor = .blue
+        tool.sizeToFit()
+        
+        let spaceArea: UIBarButtonItem = .init(systemItem: .flexibleSpace)
+        let doneButton: UIBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(donePressed))
+        
+        tool.setItems([spaceArea, doneButton], animated: false)
+        tool.isUserInteractionEnabled = true
+        
+        return tool
     }()
     
     let circleStack1: UIStackView = {
@@ -183,10 +201,16 @@ class ProfileEditViewController: UIViewController {
         return stack
     }()
     
-    @IBAction func buttonPressed(_ sender: UIButton) {
-        
-        nameLabel.becomeFirstResponder()
-        
+    @objc
+    private func donePressed(_ sender: UIToolbar) {
+        nameLabel.resignFirstResponder()
+        guard let name = nameLabel.text else { return }
+        circleLabel.text = name.first?.description
+        delegate?.setNewName(index: index, newName: name)
+    }
+    
+    @objc
+    private func buttonPressed(_ sender: UIButton) {
         guard let color = sender.backgroundColor else { return }
         circleView.backgroundColor = color
         delegate?.changeColor(index: index, color: color)
@@ -209,6 +233,8 @@ class ProfileEditViewController: UIViewController {
         circleStack2.addArrangedSubview(circle6)
         circleStack2.addArrangedSubview(circle7)
         circleStack2.addArrangedSubview(circle8)
+        
+        nameLabel.inputAccessoryView = toolBar
         
         NSLayoutConstraint.activate([
             circleView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
